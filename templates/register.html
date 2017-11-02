@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+      </div>
+    </header>
+    
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="profile">
+              <h1 class="page-header">Register</h1>
+              <div class="row">
+                <div class="col-md-8">
+                  <!-- registration information -->
+                  <div style="height: 3px"></div>
+                  <p class="text-danger"> {{ register_info }} </p>
+                  <div style="height: 3px"></div>
+                  <form method="post" action = "{{ url_for('register') }}">
+                    <div class="form-group">
+                        <label>zid</label>
+                        <input type="text" class="form-control" placeholder="e.g. z5555555" name="zid" >
+                    </div>
+                    <div class="form-group">
+                        <div style="height: 3px"></div>
+                        <input type="password" class="form-control" placeholder="Enter password" name="new_password_1">
+                        <div style="height: 3px"></div>
+                        <input type="password" class="form-control" placeholder="Enter password again" name="new_password_2">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>  
+                        <input type="text" class="form-control" placeholder="A confirmation code will be sent to you" name="email">
+                    </div>  
+
+                    <button type="submit" class="btn btn-primary">Register</button>
+                  </form>
+                  <!-- cancel registration -->
+                  <div style="height: 3px"></div>
+                  <form class="form-signin" method="post" action = "{{ url_for('login') }}">
+                    <button class="btn btn-primary" type="submit">Cancel</button>
+                  </form>
+                  <div style="height: 3px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>

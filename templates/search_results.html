@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+        <form class="form-inline">
+          <p class="text-right"><img src="{{ url_for('static', filename=g.user['profile_img']) }}" class="img-thumbnail" alt="" width="70px;" height="70px;"></p>
+          <h4 style="color:white;"><strong>
+            <p class="text-right">Hello, {{ g.user['full_name'] }}! </p>
+            <a href="{{ url_for('index', zid = g.user['zid']) }}" style="color:white;">My Homepage</a> | 
+            <a href="{{ url_for('logout') }}" style="color:white;">Log out</a>
+          </strong></h4>
+        </form>
+      </div>
+    </header>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('index', zid = g.user['zid']) }}">News</a></li>
+            <li><a href="{{ url_for('view_profile', zid = g.user['zid']) }}">Profile</a></li>
+            <li><a href="{{ url_for('view_friends', zid = g.user['zid']) }}">Friends</a></li>
+            
+            <!-- Search Part-->
+            <li><form class="form-inline" method="post" action = "{{ url_for('search') }}">
+                <div style="height: 8px"></div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search for users or posts" name = "keyword" style="width: 360px;">
+                </div>
+                <button type="submit" class="btn btn-default">Go</button>
+            </form></li>
+            <!-- Search End-->
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1><p>Search result for "{{ search_keyword }}"</p></h1>
+            
+            <!-- search result for user -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title">Related users</h4>
+              </div>
+              <div class="panel-body">
+                <!-- Friend begin --> 
+                {% if students_profile|length > 0%}
+                  {% for friend in students_profile %}
+                    <div class="col-md-2">
+                      <a href="{{ url_for('index', zid=friend['zid']) }}" class="img-thumbnail">
+                      <img src="{{ url_for('static', filename=friend['profile_img']) }}" class="img-responsive center-block" alt="" width="70px;" height="70px;">
+                      <div class="text-center">{{ friend['full_name'] }}</div>
+                      </a>
+                      <div style="height: 5px"></div>
+                      <HR>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  No search result
+                {% endif %}
+                <!-- Friend end -->
+              </div>
+              <!-- new post end -->
+            </div>
+            
+            <!-- search result for post -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title">Related posts</h4>
+              </div>
+              <div class="panel-body">
+                <!-- Pagination -->
+                {% for page in pages %}
+                  {% if page|length > 0 %}
+                    <a data-toggle="collapse" data-target="#{{ page[0] }}">
+                      View related posts : {{ page[0] + 1  }} - {{ page[-1] + 1}}
+                    </a>
+                    <br>
+                    {% if page[0] == 0 %}
+                      <div id="{{ page[0] }}" class="collapse in">
+                    {% else %}
+                      <div id="{{ page[0] }}" class="collapse">
+                    {% endif %}
+                    <!-- Post region-->
+                      {% for post_id in page %}
+                        {% set post = all_posts[post_id] %}
+                        <div class="panel panel-default post" style="border-style:none;">
+                          <div class="panel-body">
+                            <div class="row">
+                              <div class="col-md-2">
+                                <a href="{{ url_for('index', zid=post['zid']) }}" class="img-thumbnail">
+                                  <img src="{{ url_for('static', filename=post['profile_img']) }}" class="img-responsive" alt="" width="70px;" height="70px;">
+                                  <div class="text-center">{{ post['full_name'] }}</div>
+                                </a>
+                              </div>
+                              <div class="col-md-10">
+                                <div class="bubble" style="width:100%">
+                                  <div class="pointer">
+                                    <p>{{ post['message'] | safe}}</p>
+                                    <p class="text-right">{{ post['time'] }}</p>
+                                  </div>
+                                  <div class="pointer-border"></div>
+                                </div>
+                                <!-- check post details -->
+                                <p class="post-actions">
+                                  <a href="{{ url_for('view_post_detail', zid=g.user['zid'], post_id=post['id']) }}">View detail</a>
+                                  {% if post['zid'] == g.user['zid'] %}
+                                    |
+                                    <a href="{{ url_for('delete_post', zid = g.user['zid'], post_id = post['id']) }}">Delete post</a>
+                                  {% endif %}
+                                </p>
+                                <div class="clearfix"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    <!-- Post end -->
+                    </div>     
+                  {% else %}
+                    No search result
+                  {% endif %}  
+                {% endfor %}
+                <!-- Pagination end -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  </body>
+</html>
+

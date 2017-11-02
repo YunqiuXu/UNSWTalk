@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+        <form class="form-inline">
+          <p class="text-right"><img src="{{ url_for('static', filename=g.user['profile_img']) }}" class="img-thumbnail" alt="" width="70px;" height="70px;"></p>
+          <h4 style="color:white;"><strong>
+            <p class="text-right">Hello, {{ g.user['full_name'] }}! </p>
+            <a href="{{ url_for('index', zid = g.user['zid']) }}" style="color:white;">My Homepage</a> |
+            <a href="{{ url_for('logout') }}" style="color:white;">Log out</a>
+          </strong></h4>
+        </form>
+      </div>
+    </header>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('index', zid = curr_profile['zid']) }}">News</a></li>
+            <li><a href="{{ url_for('view_profile', zid = curr_profile['zid']) }}">Profile</a></li>
+            <li class="active"><a href="{{ url_for('view_friends', zid = curr_profile['zid']) }}">Friends</a></li>
+            
+            <!-- Search Part-->
+            <li><form class="form-inline" method="post" action = "{{ url_for('search') }}">
+                <div style="height: 8px"></div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search for users or posts" name = "keyword" style="width: 360px;">
+                </div>
+                <button type="submit" class="btn btn-default">Go</button>
+            </form></li>
+            <!-- Search End-->
+          
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    
+    <section>
+      <!-- Friend suggession (g.user only) --> 
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="members">
+            {% if curr_profile['zid'] == g.user['zid'] %}
+              <h1 class="page-header">Friend suggession</h1>
+              {% for friend in friend_suggestion %}
+                <div class="col-md-2">
+                  <a href="{{ url_for('index', zid=friend['zid']) }}" class="img-thumbnail">
+                  <img src="{{ url_for('static', filename=friend['profile_img']) }}" class="img-responsive center-block" alt="" width="140px;" height="140px;">
+                  <div class="text-center">{{ friend['full_name'] }}</div>
+                  </a>
+                  <div style="height: 5px"></div>
+                  <a href="{{ url_for('add_friend_list', curr_zid = curr_profile['zid'], zid = friend['zid']) }}" class="btn btn-primary"><i class="fa fa-user-plus"></i> Add to friend </a>
+                  <HR>
+                </div>
+              {% endfor %}
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Friend list -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="members">
+            <!-- check whether this is your home page -->
+            {% if curr_profile['zid'] == g.user['zid'] %}
+              <h1 class="page-header">My friends</h1>
+            {% else %}
+              <h1 class="page-header">{{ curr_profile['full_name'] }}'s friends</h1>
+            {% endif %}  
+              <!-- Friend list begin --> 
+              {% for friend in friends_profile %}
+                <div class="col-md-2">
+                  <a href="{{ url_for('index', zid=friend['zid']) }}" class="img-thumbnail">
+                  <img src="{{ url_for('static', filename=friend['profile_img']) }}" class="img-responsive center-block" alt="" width="140px;" height="140px;">
+                  <div class="text-center">{{ friend['full_name'] }}</div>
+                  </a>
+                  <div style="height: 5px"></div>
+                  <!-- if zid is in g.user's friend list : unfriend buttion, else :  Add to friend button --> 
+                  {% if friend['zid'] == g.user['zid'] %}
+                    <a href="#" class="btn btn-default" disabled="disabled"><i class="fa fa-check"></i> You </a>
+                  {% elif friend['zid'] in g.user['friends'] %}
+                    <a href="{{ url_for('delete_friend_list', curr_zid = curr_profile['zid'], zid = friend['zid']) }}" class="btn btn-default"><i class="fa fa-user-times"></i> Unfriend </a>
+                  {% else %}
+                    <a href="{{ url_for('add_friend_list', curr_zid = curr_profile['zid'], zid = friend['zid']) }}" class="btn btn-primary"><i class="fa fa-user-plus"></i> Add to friend </a>
+                  {% endif %}
+                  <HR>
+                </div>
+              {% endfor %}
+              <!-- Friend list end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>

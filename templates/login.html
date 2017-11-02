@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+      </div>
+    </header>
+    
+    <div class="center-block" style="width:30%;">
+      <div class="login">
+        <form class="form-signin" method="post" action = "{{ url_for('login') }}">
+          <div style="height: 10px"></div>
+          Welcome to UNSWTalk!
+          <br>
+          Please login e.g. z5195935 / rosebud
+          <input type="text" class="form-control" name="zid" placeholder="Username">
+          <div style="height: 3px"></div>
+          <input type="password" class="form-control" name="password" placeholder="Password" required="">
+          <div style="height: 3px"></div>
+          <p class="text-danger"> {{ login_info }} </p>
+          <div style="height: 3px"></div>
+          <button class="btn btn-primary btn-block" type="submit">Log in</button>
+        </form>
+        <div style="height: 3px"></div>
+        <!-- action should be changed to url_for -->
+        <form class="form-signin" method="post" action = "{{ url_for('to_register_page') }}">
+          <button class="btn btn-primary btn-block" type="submit">Register</button>
+        </form>
+        <div style="height: 3px"></div>
+        <!-- action should be changed to url_for -->
+        <form class="form-signin" method="post" action = "register">
+          <button class="btn btn-primary btn-block" type="submit">Forgot password</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  </body>
+</html>
+

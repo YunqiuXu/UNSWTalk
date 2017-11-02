@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+        <form class="form-inline">
+          <p class="text-right"><img src="{{ url_for('static', filename=g.user['profile_img']) }}" class="img-thumbnail" alt="" width="70px;" height="70px;"></p>
+          <h4 style="color:white;"><strong>
+            <p class="text-right">Hello, {{ g.user['full_name'] }}! </p>
+            <a href="{{ url_for('index', zid = g.user['zid']) }}" style="color:white;">My Homepage</a> | 
+            <a href="{{ url_for('logout') }}" style="color:white;">Log out</a>
+          </strong></h4>
+        </form>
+      </div>
+    </header>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('index', zid = g.user['zid']) }}">News</a></li>
+            <li  class="active"><a href="{{ url_for('view_profile', zid = g.user['zid']) }}">Profile</a></li>
+            <li><a href="{{ url_for('view_friends', zid = g.user['zid']) }}">Friends</a></li>
+            
+            <!-- Search Part-->
+            <li><form class="form-inline" method="post" action = "{{ url_for('search') }}">
+                <div style="height: 8px"></div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search for users or posts" name = "keyword" style="width: 360px;">
+                </div>
+                <button type="submit" class="btn btn-default">Go</button>
+            </form></li>
+            <!-- Search End-->
+          
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="profile">
+              <h1 class="page-header">Edit profile</h1>
+              <div class="row">
+                <div class="col-md-8">
+                <!-- edit profile -->
+                <form method="post" action = "{{ url_for('edit_profile') }}" enctype="multipart/form-data">
+                  <div class="form-group">
+                      <label>zid</label>
+                      <input type="text" class="form-control" name="zid" value="{{ g.user['zid'] }}" disabled>
+                  </div>
+                  <div class="form-group">
+                      <label>Password</label>
+                      <input type="password" class="form-control" placeholder="Enter old password" name="old_password">
+                      <div style="height: 3px"></div>
+                      <input type="password" class="form-control" placeholder="Enter new password" name="new_password_1">
+                      <div style="height: 3px"></div>
+                      <input type="password" class="form-control" placeholder="Enter new password again" name="new_password_2">
+                  </div>
+                  <div class="form-group">
+                      <label>Name</label>
+                      <input type="text" class="form-control" placeholder="Change name" name="full_name" value="{{ g.user['full_name'] }}">
+                  </div>
+                  <div class="form-group">
+                      <label>Email</label>  
+                      <input type="text" class="form-control" placeholder="Change email" name="email" value="{{ g.user['email'] }}">
+                  </div>
+                  <div class="form-group">
+                      <label>Birthday</label>
+                      <input type="date" class="form-control" name="birthday" value="{{ g.user['birthday'] }}">
+                  </div>
+                  <div class="form-group">
+                      <label>Hometown</label>
+                      <input type="text" class="form-control" placeholder="Change hometown" name="home_suburb" value="{{ g.user['home_suburb'] }}">
+                  </div>
+                  <div class="form-group">
+                      <label>Program</label>
+                      <input type="text" class="form-control" placeholder="Change program" name="program" value="{{ g.user['program'] }}">
+                  </div>
+                  <div class="form-group">
+                      <label>Profile Text</label>
+                      <textarea class="form-control" placeholder="Change profile text" name="profile_text">{{ g.user['profile_text'] }}</textarea>
+                  </div>
+
+
+                  <!-- Handle image -->
+                  <div class="form-group">
+                      <label>Profile Image</label>
+                      <input type="file" class="form-control-file" name="img_path">
+                  </div>
+                  <!-- Handle image end -->
+
+                  <button type="submit" class="btn btn-primary">Commit changes</button>
+                </form>
+                <!-- edit profile end -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>

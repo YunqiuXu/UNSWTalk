@@ -1,0 +1,24 @@
+Date     Start     Stop     Activity     Comments
+16/10    08:00     16:00    Learning     Get familiar with sqlite
+17/10    15:00     20:00    Coding       Build schema, transform dataset to database
+17/10    22:00     24:00    Coding       DB operations
+19/10    08:00     14:00    Coding       Build basic framework, try level 0 and level 1
+19/10    14:00     19:00    Learning     Get familiar with HTML, CSS, Flask
+20/10    14:00     17:00    Coding       Apply bootstrap
+20/10    18:00     23:00    Learning     Build formal framework
+21/10    08:00     18:00    Coding       Login , logout, homepage, profile page
+21/10    19:00     21:00    Debugging    Fix some errors
+22/10    14:00     18:00    Coding       Friend list, friend / unfriend
+22/10    19:00     21:00    Debugging
+24/10    08:00     14:00    Coding       Posts - comments - replies
+24/10    16:00     19:00    Coding       More post related functions, hide details
+25/10    12:00     15:00    Coding       Search and Pagination
+25/10    16:00     19:00    Coding       Show profile
+26/10    08:00     12:00    Coding       Edit profile
+27/10    09:00     12:00    Debugging    Change profile image
+29/10    09:00     12:00    Coding       Create account, confirmation
+29/10    13:00     19:00    Coding       Suspend / activate / delete account
+29/10    21:00     23:00    Debugging    Fix bugs on account creation, first submit
+30/10    06:00     08:00    Coding       Password recovery
+30/10    09:00     11:00    Coding       Friend suggession
+30/10    11:00     14:00    Debugging    Final checking and submission     

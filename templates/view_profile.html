@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+        <form class="form-inline">
+          <p class="text-right"><img src="{{ url_for('static', filename=g.user['profile_img']) }}" class="img-thumbnail" alt="" width="70px;" height="70px;"></p>
+          <h4 style="color:white;"><strong>
+            <!-- suspended -->
+            {% if g.user['suspended'] == 1 %}
+              <p class="text-right">(SUSPENDED)</p>
+            {% endif %}
+            <p class="text-right">Hello, {{ g.user['full_name'] }}! </p>
+            <a href="{{ url_for('index', zid = g.user['zid']) }}" style="color:white;">My Homepage</a> | 
+            <a href="{{ url_for('logout') }}" style="color:white;">Log out</a>
+          </strong></h4>
+        </form>
+      </div>
+    </header>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+
+            <!-- suspended -->
+            {% if g.user['suspended'] == 0 %}
+              <li><a href="{{ url_for('index', zid = curr_profile['zid']) }}">News</a></li>
+              <li  class="active"><a href="{{ url_for('view_profile', zid = curr_profile['zid']) }}">Profile</a></li>
+            {% else %}
+              <li><a href="{{ url_for('index', zid = g.user['zid']) }}">News</a></li>
+              <li class="active"><a href="{{ url_for('view_profile', zid = g.user['zid']) }}">Profile</a></li>
+            {% endif %}
+            
+            <!-- suspended -->
+            {% if g.user['suspended'] == 0 %}
+              <li><a href="{{ url_for('view_friends', zid = curr_profile['zid']) }}">Friends</a></li>
+              <!-- Search Part-->
+              <li><form class="form-inline" method="post" action = "{{ url_for('search') }}">
+                  <div style="height: 8px"></div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search for users or posts" name = "keyword" style="width: 360px;">
+                  </div>
+                  <button type="submit" class="btn btn-default">Go</button>
+              </form></li>
+            <!-- Search End-->
+            {% endif %}
+          
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% if g.user['suspended'] == 0 %}
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="profile">
+                <!-- check whether this is your home page -->
+                {% if curr_profile['zid'] == g.user['zid'] %}
+                  <h1 class="page-header">My profile</h1>
+                {% else %}
+                  <h1 class="page-header">{{ curr_profile['full_name'] }}'s profile</h1>
+                {% endif %}
+                <div class="row">
+                  <div class="col-md-4">
+                    <img src="{{ url_for('static', filename=curr_profile['profile_img']) }}" class="img-responsive center-block" alt="" width="250px;" height="250px;">
+                  </div>
+                  <div class="col-md-8">
+                    <ul>
+                      <li><h4><strong>Name: </strong>{{ curr_profile['full_name'] }}</h4></li>
+                      <li><h4><strong>Birthday: </strong>{{ curr_profile['birthday'] }}</h4></li>
+                      <li><h4><strong>Hometown: </strong>{{ curr_profile['home_suburb'] }}</h4></li>
+                      <li><h4><strong>Program: </strong>{{ curr_profile['program'] }}</h4></li>
+                      <li><h4><strong>Profile Text: </strong>
+                        <div class="panel-body">
+                          <i>{{ curr_profile['profile_text'] | safe }}</i>
+                        </div>
+                      </h4></li>
+                      <!-- g.user is able to edit profile -->
+                      {% if curr_profile['zid'] == g.user['zid'] %}
+                        <li><a href="{{ url_for('to_edit_profile_page') }}" class="btn btn-success"><i class="fa fa-edit"></i> Edit profile </a></li>
+                        <div style="height: 5px"></div>
+                        <li>
+                          <a href="{{ url_for('suspend_account') }}" class="btn btn-warning"><i class="fa fa-lock"></i> Suspend account </a>
+                          <a style="width: 5px"></a>
+                          <a href="{{ url_for('delete_account') }}" class="btn btn-danger"><i class="fa fa-remove"></i> Delete account </a>
+                        </li>
+                      {% endif %}
+                      <!-- *** -->
+                    </ul>
+                  </div>
+                </div><br><br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% else %}
+      <a href="{{ url_for('activate_account') }}" class="btn btn-success"><i class="fa fa-unlock"></i> Activate account </a>
+      <a style="width: 5px"></a>
+    {% endif %}
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>

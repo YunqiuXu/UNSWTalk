@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UNSWTalk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <img src="{{ url_for('static', filename='img/UNSWTalk_logo.png') }}" class="logo" alt="">
+        <form class="form-inline">
+          <p class="text-right"><img src="{{ url_for('static', filename=g.user['profile_img']) }}" class="img-thumbnail" alt="" width="70px;" height="70px;"></p>
+          <h4 style="color:white;"><strong>
+            <p class="text-right">Hello, {{ g.user['full_name'] }}! </p>
+            <a href="{{ url_for('index', zid = g.user['zid']) }}" style="color:white;">My Homepage</a> |
+            <a href="{{ url_for('logout') }}" style="color:white;">Log out</a>
+          </strong></h4>
+        </form>
+      </div>
+    </header>
+
+    <section>
+      <div class="container">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div style="height: 5px"></div>
+
+            <!-- The content of this post -->
+            <div class="row">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename=curr_post['profile_img']) }}" class="img-thumbnail" width="140;" height="140;" alt="">
+                <a href="{{ url_for('index', zid=curr_profile['zid']) }}" class="btn btn-default"><i class="fa"></i> Go back </a>
+              </div>
+              <div class="col-md-10">
+                <h4><p>{{ curr_post['full_name'] }}</p></h4>
+                <div class="bubble">
+                  <div class="pointer">
+                    <p>{{ curr_post['message'] | safe}}</p>
+                    <p class="text-right">{{ curr_post['time'] }}</p>
+                  </div>
+                </div>
+                {% if curr_post['zid'] == g.user['zid'] %}
+                  <a href="{{ url_for('delete_post', zid = curr_profile['zid'], post_id = curr_post['id']) }}">Delete post</a>
+                {% endif %}
+              </div>
+            </div>
+            <div style="height: 5px"></div>
+            <!-- The content of this post end -->
+
+            <!-- Add new comment -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">The latest comment will appear at bottom of all comments</h4>
+              </div>
+              <div class="panel-body">
+                <form action="{{ url_for('new_comment', zid = curr_profile['zid'], post_id = curr_post['id']) }}" method="post">
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Make new comment", name="comment"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+              </div>
+            </div>
+            <!-- Add new comment end -->
+            
+            <!-- Comment region-->
+            {% for comment in all_comments %}
+              <div class="panel panel-default post">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <a href="{{ url_for('index', zid=comment['zid']) }}" class="img-thumbnail">
+                        <img src="{{ url_for('static', filename=comment['profile_img']) }}" class="img-responsive" alt="" width="70px;" height="70px;">
+                        <div class="text-center">{{ comment['full_name'] }}</div>
+                      </a>
+                    </div>
+                    <div class="col-md-10">
+                      <div class="bubble" style="width:100%">
+                        <div class="pointer">
+                          <p>{{ comment['message'] | safe}}</p>
+                          <p class="text-right">{{ comment['time'] }}</p>
+                        </div>
+                      </div>
+                      <div style="height: 5px"></div>
+                      {% if comment['zid'] == g.user['zid'] %}
+                        <a href="{{ url_for('delete_comment', zid=curr_profile['zid'], post_id=curr_post['id'], comment_id=comment['id']) }}">Delete comment</a> | 
+                      {% endif %}
+                      <!-- Add collapse -->
+                      <a data-toggle="collapse" data-target="#{{comment['id']}}">
+                        Show replies
+                      </a>
+                      <div id="{{comment['id']}}" class="collapse">
+                        <!-- Reply region -->
+                        {% for reply in comment['replies'] %}
+                          <div class="panel panel-default post" style="border-style:none;">
+                            <div class="panel-body" border="0;">
+                              <div class="row" border="0;">
+                                <div class="col-md-2">
+                                  <a href="{{ url_for('index', zid=reply['zid']) }}" class="img-thumbnail">
+                                    <img src="{{ url_for('static', filename=reply['profile_img']) }}" class="img-responsive" alt="" width="70px;" height="70px;">
+                                    <div class="text-center">{{ reply['full_name'] }}</div>
+                                  </a>
+                                </div>
+                                <div class="col-md-10">
+                                  <div class="bubble" style="width:100%">
+                                    <div class="pointer">
+                                      <p>{{ reply['message'] | safe}}</p>
+                                      <p class="text-right">{{ reply['time'] }}</p>
+                                    </div>
+                                    <div class="pointer-border"></div>
+                                  </div>
+                                  {% if reply['zid'] == g.user['zid'] %}
+                                    <a href="{{ url_for('delete_reply', zid = curr_profile['zid'], post_id = curr_post['id'], reply_id = reply['id']) }}">Delete reply</a>
+                                  {% endif %}
+                                  <div class="clearfix"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <!-- collapse end-->
+                      <!-- add new reply -->
+                      <br>
+                      <form class="form-inline col-md-10" action="{{ url_for('new_reply', zid=g.user['zid'], post_id=curr_post['id'], comment_id=comment['id']) }}" method="post">
+                        <div class="form-group">
+                          <textarea type="text" class="form-control" placeholder="The latest reply will appear at bottom of this comment" name="reply" style="width: 360px;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                      </form>
+                      <!-- Reply end -->
+                      
+
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+            <!-- Comment end -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>COMP9041 2017 S2</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  </body>
+</html>
